@@ -1,15 +1,25 @@
-FROM node:22-bookworm
+# Stage 1: Build — install native deps with build tools
+FROM node:22-bookworm AS builder
 
-# System deps for QMD (sqlite3 for FTS5, cmake/python3 for node-llama-cpp native build)
-RUN apt-get update && apt-get install -y curl sqlite3 cmake build-essential python3 && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y cmake build-essential python3 && rm -rf /var/lib/apt/lists/*
 
-# App code + dependencies
 WORKDIR /app
 COPY package.json ./
 RUN npm install --omit=dev
-COPY server.mjs ./
 
-# Data + home directory for per-user workspace + indexes + model cache
+# Strip node-llama-cpp CUDA/Vulkan binaries (CPU-only)
+RUN rm -rf node_modules/@node-llama-cpp/linux-x64-cuda* \
+    && rm -rf node_modules/@node-llama-cpp/linux-x64-vulkan*
+
+# Stage 2: Runtime — slim image, no build tools
+FROM node:22-bookworm-slim
+
+RUN apt-get update && apt-get install -y sqlite3 curl && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+COPY --from=builder /app/node_modules ./node_modules
+COPY package.json server.mjs ./
+
 RUN mkdir -p /data /home/user/.cache && chown -R node:node /data /app /home/user
 
 ENV HOME=/home/user
