@@ -5,7 +5,7 @@ memory: 32768
 containers:
   - name: "qmd"
     # Image is automatically updated by the GitHub Actions workflow
-    image: "ghcr.io/vitadao/vita-tinfoil-agent-qmd:v0.1.0@sha256:b933ea77e0eec989c05b320932b10104ebdf058722a579cfe759f14de33dec8e"
+    image: "ghcr.io/vitadao/vita-tinfoil-agent-qmd:v0.1.0@sha256:7bde648fc4cde6a944c68b60cbd50e80b36c5a665400613baff56df1f04ec3e2"
     env:
       - PORT: "8000"
       - DATA_DIR: "/data"
