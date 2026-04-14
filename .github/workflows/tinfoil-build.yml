@@ -57,9 +57,13 @@ jobs:
           prerelease: "false"
 
       # Commit updated config back to repo so dashboard can validate it
+      # This step is non-critical — the release already exists even if this fails
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git rebase origin/main || git rebase --abort
           git add tinfoil-config.yml
           git commit -m "Update image digest to ${{ github.ref_name }}" || echo "No changes to commit"
-          git push origin HEAD:main
+          git push origin HEAD:main || echo "Warning: failed to push config update (non-critical)"
+        continue-on-error: true
