@@ -19,7 +19,7 @@ shim:
   paths:
     - /ingest
     - /predict
-    - /workspace
-    - /consolidate
+    - /workspace/*
+    - /consolidate/*
     - /user
     - /health
