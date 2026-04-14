@@ -1,0 +1,25 @@
+cvm-version: 0.7.1
+cpus: 4
+memory: 32768
+
+containers:
+  - name: "qmd"
+    # Image is automatically updated by the GitHub Actions workflow
+    image: "ghcr.io/vitadao/vita-tinfoil-qmd:latest"
+    env:
+      - PORT: "8000"
+      - DATA_DIR: "/data"
+      - INACTIVITY_MINUTES: "15"
+    secrets:
+      - QMD_API_SECRET
+    command: []
+
+shim:
+  upstream-port: 8000
+  paths:
+    - /ingest
+    - /predict
+    - /workspace
+    - /consolidate
+    - /user
+    - /health

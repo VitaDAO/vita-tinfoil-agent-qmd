@@ -1,0 +1,8 @@
+{
+  "name": "vita-tinfoil-qmd",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@tobilu/qmd": "^2.1.0"
+  }
+}
